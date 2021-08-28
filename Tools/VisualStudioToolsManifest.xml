@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<FileList>
+  <File Reference = "KSharpEditor.dll">
+    <ToolboxItems VSCategory="WYSIWYG_Editor" BlendCategory="WYSIWYG_Editor">
+      <Item Type="KSharpEditor.KEditor" />
+    </ToolboxItems>
+  </File>
+</FileList>
