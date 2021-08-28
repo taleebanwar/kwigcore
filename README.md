@@ -1,6 +1,6 @@
 # KWIG
 
-!!! .NET standard port of KWIG (https://github.com/yahch/kwig)
+!!! .NET core port of KWIG (https://github.com/yahch/kwig)
 
 KIWG is a WYSIWYG editor for WinForm based on summernote.
 
