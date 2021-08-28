@@ -8,7 +8,7 @@ KIWG is a WYSIWYG editor for WinForm based on summernote.
 
 **Instructions:**
 
-1. Add a reference to kwig.dll
+1. Use nuget to download package: Install-Package KSharpEditor -Version 1.0.0-alpha
 
 2. Add KEditor control to your form
 
