@@ -11219,14 +11219,13 @@
              $('#summernote').summernote('insertText', text);
         }
 
-        function insertImage(url, fileName) {
-            $('#summernote').summernote('insertImage', url, filename);
-        }
 
         var _lang = "zh-CN"
         function setLang(lang) {
             _lang = lang;
         }
+
+        
 
         $(document).ready(function () {
             window.external.OnEditorLoadStart();
@@ -11238,13 +11237,14 @@
                      ['style', ['bold', 'italic', 'underline', 'clear']],
                      ['font', ['strikethrough', 'superscript', 'subscript', 'fontname', 'fontsize','color']],
                      ['para', ['ul', 'ol', 'paragraph', 'height']],
-                     ['misc', ['table', 'hr', 'insertImage']]
+                     ['misc', ['table', 'hr', 'insertImage']],
+                     ['insert', ['link', 'video']],
                  ],
                  fontNames: [
                      'Arial', 'Helvetica', 'Arial Black', 'Comic Sans MS', 'Lucida Grande', '微软雅黑', '宋体', '楷体', '隶书', '幼圆', '方正姚体','华文仿宋','华文宋体'
                  ],
                  callbacks: {
-                     onInit: function () { $("#summernote").summernote("fullscreen.toggle"); }
+                     onInit: function () { $("#summernote").summernote("fullscreen.toggle"); },
                  },
                  styleTags: [
                      'p',
@@ -11254,9 +11254,12 @@
                      save: saveButton,
                      openFile: openFileButton,
                      insertImage: insertImageButton
-                 }
+                 },
+                     
              });
-             window.external.OnEditorLoadComplete();
+            window.external.OnEditorLoadComplete();
+
+            
          });
     </script>
 
