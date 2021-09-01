@@ -12,15 +12,19 @@ namespace KSharpEditor
     {
         private WebBrowser kBrowserEditor;
         private string _lang = "zh-CN";
+        private string _html = "";
+        private string _savedhtml = "";
+        bool _isReady;
 
         public event EventHandler<EditorArgs> OpenButtonClick;
         public event EventHandler<EditorArgs> SaveButtonClick;
-        public event EventHandler<EditorArgs> InsertImageClick;
+        public event EventHandler<ImageArgs> InsertImageClick;
         public event EventHandler<EditorArgs> EditorLoadComplete;
         public event EventHandler<ErrorArgs> EditorError;
 
         private void InitializeComponent()
         {
+            _isReady = false;
             this.kBrowserEditor = new WebBrowser();
             this.SuspendLayout();
             // 
@@ -67,11 +71,18 @@ namespace KSharpEditor
         /// </summary>
         public string Language
         {
+            get {
+                return _lang;
+            }
             set
             {
                 try
                 {
-                    kBrowserEditor?.Document?.InvokeScript("setLang", new string[] { value });
+                    if (_isReady)
+                    {
+                        kBrowserEditor?.Document?.InvokeScript("setLang", new string[] { value });
+                    }
+                    _lang = value;
                 }
                 catch (Exception ex)
                 {
@@ -100,6 +111,25 @@ namespace KSharpEditor
         }
 
         /// <summary>
+        /// returns true if there are any unsaved changes.
+        /// </summary>
+        public bool IsDirty
+        {
+            get { return string.Compare(this.Html, _savedhtml, false) != 0; }
+            set
+            {
+                if (value)
+                {
+                    _savedhtml = this.Html;
+                }
+                else
+                {
+                    _savedhtml = this.Html + " ";
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the html in the editor
         /// </summary>
         public string Html
@@ -108,7 +138,11 @@ namespace KSharpEditor
             {
                 try
                 {
-                    return kBrowserEditor.Document.InvokeScript("getHtml").ToString();
+                    if (_isReady)
+                    {
+                        return kBrowserEditor.Document.InvokeScript("getHtml").ToString();
+                    }
+                    return _html;
                 }
                 catch (Exception ex)
                 {
@@ -120,7 +154,11 @@ namespace KSharpEditor
             {
                 try
                 {
-                    kBrowserEditor.Document.InvokeScript("setHtml", new string[] { value });
+                    if (_isReady)
+                    {
+                        kBrowserEditor.Document.InvokeScript("setHtml", new string[] { value });
+                    }
+                    _html = value;
                 }
                 catch (Exception ex)
                 {
@@ -141,6 +179,7 @@ namespace KSharpEditor
                 UTF8Encoding con = new UTF8Encoding();
                 string str = con.GetString(bs);
                 kBrowserEditor.DocumentText = str;
+                _isReady = true;
             }
             catch (Exception ex)
             {
@@ -164,6 +203,7 @@ namespace KSharpEditor
             if (SaveButtonClick != null)
             {
                 SaveButtonClick(this, GetEditArgs());
+                _savedhtml = this.Html;
             }
         }
 
@@ -188,15 +228,32 @@ namespace KSharpEditor
 
         public void OnInsertImageButtonClicked()
         {
-            if (KEditorEventListener != null) KEditorEventListener.OnInsertImageClicked();
+            frmInsertImage frm = new frmInsertImage();
+            frm.FileUrlAccepted += Frm_FileUrlAccepted;
+            frm.ShowDialog(this);
+            //if (KEditorEventListener != null) KEditorEventListener.OnInsertImageClicked();
+            //if (InsertImageClick != null)
+            //{
+            //    InsertImageClick(this, GetEditArgs());
+            //}
+        }
+
+        private void Frm_FileUrlAccepted(object sender, ImageArgs e)
+        {
             if (InsertImageClick != null)
             {
-                InsertImageClick(this, GetEditArgs());
+                InsertImageClick(this, e);
+            }
+            if (!e.Cancel)
+            {
+                InsertImage(e.File, e.base64);
             }
         }
 
         public void OnEditorLoadComplete()
         {
+            Html = _html;
+            _savedhtml = _html;
             if (KEditorEventListener != null) KEditorEventListener.OnEditorLoadComplete();
             if (EditorLoadComplete != null)
             {
@@ -206,6 +263,7 @@ namespace KSharpEditor
 
         public void OnEditorLoadStart() {
             Language = _lang;
+            
         }
 
         /// <summary>
@@ -282,6 +340,11 @@ namespace KSharpEditor
             {
                 OnError(ex);
             }
+        }
+
+        public void InsertImage1(object a, object b, object c)
+        {
+
         }
     }
 }
