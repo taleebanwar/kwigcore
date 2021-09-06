@@ -21,6 +21,7 @@ namespace KSharpEditor
         public event EventHandler<ImageArgs> InsertImageClick;
         public event EventHandler<EditorArgs> EditorLoadComplete;
         public event EventHandler<ErrorArgs> EditorError;
+        public event EventHandler<EditorArgs> OnChange;
 
         private void InitializeComponent()
         {
@@ -116,17 +117,6 @@ namespace KSharpEditor
         public bool IsDirty
         {
             get { return string.Compare(this.Html, _savedhtml, false) != 0; }
-            set
-            {
-                if (value)
-                {
-                    _savedhtml = this.Html;
-                }
-                else
-                {
-                    _savedhtml = this.Html + " ";
-                }
-            }
         }
 
         /// <summary>
@@ -140,7 +130,7 @@ namespace KSharpEditor
                 {
                     if (_isReady)
                     {
-                        return kBrowserEditor.Document.InvokeScript("getHtml").ToString();
+                        return kBrowserEditor.Document.InvokeScript("getHtml")?.ToString();
                     }
                     return _html;
                 }
@@ -214,6 +204,13 @@ namespace KSharpEditor
             if (OpenButtonClick != null)
             {
                 OpenButtonClick(this, GetEditArgs());
+            }
+        }
+
+        public void OnDomModified(object contents) {
+            if (OnChange!=null)
+            {
+                OnChange(this, GetEditArgs());
             }
         }
 
