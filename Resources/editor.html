@@ -11234,6 +11234,7 @@
                  lang: _lang,
                  toolbar: [
                      ['file', ['openFile', 'save']],
+                     ['test', ['style']],
                      ['style', ['bold', 'italic', 'underline', 'clear']],
                      ['font', ['strikethrough', 'superscript', 'subscript', 'fontname', 'fontsize','color']],
                      ['para', ['ul', 'ol', 'paragraph', 'height']],
@@ -11241,20 +11242,20 @@
                      ['insert', ['link', 'video']],
                  ],
                  fontNames: [
-                     'Arial', 'Helvetica', 'Arial Black', 'Comic Sans MS', 'Lucida Grande', '微软雅黑', '宋体', '楷体', '隶书', '幼圆', '方正姚体','华文仿宋','华文宋体'
+                     'Arial', 'Helvetica', 'Arial Black', 'Comic Sans MS', 'Lucida Grande'
                  ],
                  callbacks: {
                      onInit: function () { $("#summernote").summernote("fullscreen.toggle"); },
+                     onChange: function (contents, $editable) {
+                         window.external.OnDomModified(contents);
+                     }
                  },
-                 styleTags: [
-                     'p',
-                     'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
-                 ],
                  buttons: {
                      save: saveButton,
                      openFile: openFileButton,
                      insertImage: insertImageButton
                  },
+                 spellCheck: true
                      
              });
             window.external.OnEditorLoadComplete();
