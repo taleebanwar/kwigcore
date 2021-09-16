@@ -11225,6 +11225,11 @@
             _lang = lang;
         }
 
+        var _toolbar;
+        function setToolbar(toolbar) {
+            _toolbar = JSON.parse(toolbar);
+        }
+
         
 
         $(document).ready(function () {
@@ -11232,15 +11237,7 @@
              $('#summernote').summernote({
                  focus:true,
                  lang: _lang,
-                 toolbar: [
-                     ['file', ['openFile', 'save']],
-                     ['test', ['style']],
-                     ['style', ['bold', 'italic', 'underline', 'clear']],
-                     ['font', ['strikethrough', 'superscript', 'subscript', 'fontname', 'fontsize','color']],
-                     ['para', ['ul', 'ol', 'paragraph', 'height']],
-                     ['misc', ['table', 'hr', 'insertImage']],
-                     ['insert', ['link', 'video']],
-                 ],
+                 toolbar: _toolbar,
                  fontNames: [
                      'Arial', 'Helvetica', 'Arial Black', 'Comic Sans MS', 'Lucida Grande'
                  ],

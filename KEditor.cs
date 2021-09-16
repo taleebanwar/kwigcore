@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using KSharpEditor.DTOs;
 
 namespace KSharpEditor
 {
@@ -60,12 +61,13 @@ namespace KSharpEditor
         /// Sets the language of the browser. Default is zh-CN
         /// </summary>
         /// <param name="lang">The language to set. Supported are en-US, zh-CN</param>
-        public KEditor(string lang): this()
+        public KEditor(string lang) : this()
         {
             _lang = lang;
         }
 
         public IKEditorEventListener KEditorEventListener { get; set; }
+        public Toolbar toolbar { get; set; }
 
         /// <summary>
         /// Sets the language of the editor.
@@ -208,7 +210,7 @@ namespace KSharpEditor
         }
 
         public void OnDomModified(object contents) {
-            if (OnChange!=null)
+            if (OnChange != null)
             {
                 OnChange(this, GetEditArgs());
             }
@@ -260,7 +262,15 @@ namespace KSharpEditor
 
         public void OnEditorLoadStart() {
             Language = _lang;
-            
+
+            if (toolbar == null)
+            {
+                toolbar = new Toolbar();
+            }
+            KSharpSettings settings = new KSharpSettings(toolbar);
+            string sToolbar = settings.GetToolbars();
+
+            kBrowserEditor?.Document?.InvokeScript("setToolbar", new string[] { sToolbar });
         }
 
         /// <summary>
@@ -337,11 +347,6 @@ namespace KSharpEditor
             {
                 OnError(ex);
             }
-        }
-
-        public void InsertImage1(object a, object b, object c)
-        {
-
         }
     }
 }
